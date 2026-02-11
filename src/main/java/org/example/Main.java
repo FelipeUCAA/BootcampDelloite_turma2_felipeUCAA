@@ -1,14 +1,15 @@
 package org.example;
 
 import model.UsuarioModel;
+import repository.UsuarioRepository;
 import service.UsuarioService;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 public class Main {
-
-    private static final UsuarioService service = new UsuarioService();
+    private static final UsuarioService service = new UsuarioService(new UsuarioRepository());
     private static final Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -58,13 +59,19 @@ public class Main {
     }
 
     private static void criarUsuario() {
-        System.out.print("Nome: ");
-        String nome = scanner.nextLine();
-        System.out.print("Email: ");
-        String email = scanner.nextLine();
+        try {
+            System.out.print("Nome: ");
+            String nome = scanner.nextLine().trim();
 
-        service.criar(nome, email);
-        System.out.println("Usuário criado com sucesso!");
+            System.out.print("Email: ");
+            String email = scanner.nextLine().trim();
+
+            service.criar(nome, email);
+            System.out.println("Usuário criado com sucesso!");
+
+        } catch (IllegalArgumentException e) {
+            System.out.println("Erro: " + e.getMessage());
+        }
     }
 
     private static void listarUsuarios() {

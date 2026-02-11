@@ -6,20 +6,16 @@ public class UsuarioModel {
     private String nome;
     private String email;
 
-    // INSERT
     public UsuarioModel(String nome, String email) {
-        this.nome = nome;
-        this.email = email;
+        this(null, nome, email);
     }
 
-    // SELECT
     public UsuarioModel(Long id, String nome, String email) {
         this.id = id;
         this.nome = nome;
         this.email = email;
     }
 
-    // get&set
     public Long getId() {
         return id;
     }
@@ -33,6 +29,9 @@ public class UsuarioModel {
     }
 
     public void setNome(String nome) {
+        if (nome == null || nome.isBlank()) {
+            throw new IllegalArgumentException("Nome não pode ser vazio");
+        }
         this.nome = nome;
     }
 
@@ -41,6 +40,17 @@ public class UsuarioModel {
     }
 
     public void setEmail(String email) {
+        if (email == null || email.isBlank()) {
+            throw new IllegalArgumentException("Email não pode ser vazio");
+        }
         this.email = email;
+    }
+    @Override
+    public String toString() {
+        return "UsuarioModel{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }

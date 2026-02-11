@@ -35,8 +35,16 @@ public class UsuarioRepository {
             stmt.execute(sql);
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Erro ao criar tabela", e);
         }
+    }
+    //map
+    private UsuarioModel map(ResultSet rs) throws SQLException {
+        return new UsuarioModel(
+                rs.getLong("id"),
+                rs.getString("nome"),
+                rs.getString("email")
+        );
     }
 
     // CREATE
@@ -44,36 +52,38 @@ public class UsuarioRepository {
         String sql = "INSERT INTO usuarios (nome, email) VALUES (?, ?)";
 
         try (Connection conn = getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             ps.setString(1, usuario.getNome());
             ps.setString(2, usuario.getEmail());
             ps.executeUpdate();
+            //pega id gerado automatico
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    usuario.setId(rs.getLong(1));
+                }
+            }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Erro ao salvar usuário", e);
         }
     }
 
     // READ - todos
     public List<UsuarioModel> listar() {
         List<UsuarioModel> usuarios = new ArrayList<>();
-        String sql = "SELECT * FROM usuarios";
+        String sql = "SELECT id, nome, email FROM usuarios";
 
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                usuarios.add(new UsuarioModel(
-                        rs.getLong("id"),
-                        rs.getString("nome"),
-                        rs.getString("email")
-                ));
+                usuarios.add(map(rs));
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Erro ao listar usuários", e);
         }
 
         return usuarios;
@@ -81,24 +91,21 @@ public class UsuarioRepository {
 
     // READ - por ID
     public UsuarioModel buscarPorId(Long id) {
-        String sql = "SELECT * FROM usuarios WHERE id = ?";
+        String sql = "SELECT id, nome, email FROM usuarios WHERE id = ?";
 
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setLong(1, id);
-            ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
-                return new UsuarioModel(
-                        rs.getLong("id"),
-                        rs.getString("nome"),
-                        rs.getString("email")
-                );
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return map(rs);
+                }
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Erro ao buscar usuário", e);
         }
 
         return null;
@@ -122,10 +129,8 @@ public class UsuarioRepository {
             return ps.executeUpdate() > 0;
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Erro ao atualizar usuário", e);
         }
-
-        return false;
     }
 
     // DELETE
@@ -139,9 +144,7 @@ public class UsuarioRepository {
             return ps.executeUpdate() > 0;
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Erro ao remover usuário", e);
         }
-
-        return false;
     }
 }
