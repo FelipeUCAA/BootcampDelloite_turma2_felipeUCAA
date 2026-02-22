@@ -1,11 +1,13 @@
-package service;
+package org.example.service;
 
-import model.UsuarioModel;
-import repository.UsuarioRepository;
-import validation.UsuarioValidator;
+import org.example.model.UsuarioModel;
+import org.example.repository.UsuarioRepository;
+import org.example.validation.UsuarioValidator;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class UsuarioService {
 
     private final UsuarioRepository repository;
@@ -18,19 +20,20 @@ public class UsuarioService {
         UsuarioValidator.validarNome(nome);
         UsuarioValidator.validarEmail(email);
 
-        repository.salvar(new UsuarioModel(nome, email));
+        repository.save(new UsuarioModel(nome, email));
     }
 
     public List<UsuarioModel> listar() {
-        return repository.listar();
+        return repository.findAll();
     }
 
     public UsuarioModel buscar(Long id) {
-        return repository.buscarPorId(id);
+        return repository.findById(id).orElse(null);
     }
 
     public boolean atualizar(Long id, String nome, String email) {
-        UsuarioModel usuario = repository.buscarPorId(id);
+
+        UsuarioModel usuario = repository.findById(id).orElse(null);
 
         if (usuario == null) {
             return false;
@@ -42,12 +45,17 @@ public class UsuarioService {
         usuario.setNome(nome);
         usuario.setEmail(email);
 
-        repository.atualizar(usuario);
+        repository.save(usuario); // save também atualiza
 
         return true;
     }
 
     public boolean deletar(Long id) {
-        return repository.remover(id);
+
+        if (!repository.existsById(id)) {
+            return false;
+        }
+        repository.deleteById(id);
+        return true;
     }
 }
