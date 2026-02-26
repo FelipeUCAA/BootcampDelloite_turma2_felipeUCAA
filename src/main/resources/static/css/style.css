@@ -1,0 +1,57 @@
+:root {
+    /* Cores do Padrão de Design (Paleta Neutra + Indigo) */
+    --bg-body: #f8fafc;        /* Cinza muito claro, quase branco */
+    --bg-card: #ffffff;
+    --primary: #4f46e5;       /* Indigo moderno para ações */
+    --primary-hover: #4338ca;
+    --text-main: #1e293b;     /* Cinza escuro para texto (melhor que preto puro) */
+    --border-color: #e2e8f0;
+    --shadow-standard: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+body {
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Inter', system-ui, sans-serif;
+    margin: 0;
+}
+
+.tabela-container {
+    max-height: 250px;
+    overflow-y: auto;
+    margin-bottom: 24px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: #fff;
+}
+
+.card-custom {
+    background: var(--bg-card);
+    border-radius: 12px;
+    padding: 32px;
+    box-shadow: var(--shadow-standard);
+    width: 100%;
+    max-width: 500px;
+    border: 1px solid var(--border-color);
+}
+
+.btn-custom {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.btn-custom:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
