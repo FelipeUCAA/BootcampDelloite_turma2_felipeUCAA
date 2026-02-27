@@ -49,6 +49,7 @@ jobs:
         with:
           app-name: 'Felipeucaabootcampdeloitte'
           slot-name: 'Production'
-          package: '**/*.jar'
+          package: '*.jar'
 
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E1ACC18A06724E3DA0DCD6A8451C8E20 }}
+
