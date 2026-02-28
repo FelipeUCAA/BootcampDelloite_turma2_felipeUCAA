@@ -2,12 +2,14 @@ package org.example.runner;
 
 import org.example.model.UsuarioModel;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.example.service.UsuarioService;
 
 import java.util.List;
 import java.util.Scanner;
 
+@Profile("dev")
 @Component
 public class ConsoleRunner implements CommandLineRunner {
 
